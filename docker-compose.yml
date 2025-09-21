@@ -1,0 +1,37 @@
+services:
+  db_dashboard:
+    image: postgis/postgis:16-3.4
+    container_name: db_dashboard
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: infomdss
+      POSTGRES_DB: dashboard
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_dashboard-data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U student -d dashboard"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  etl:
+    build: ./etl
+    container_name: dss_group4_etl
+    depends_on:
+      db_dashboard:
+        condition: service_healthy
+    environment:
+      DB_HOST: db_dashboard
+      DB_PORT: "5432"
+      DB_NAME: dashboard
+      DB_USER: student
+      DB_PASSWORD: infomdss
+    command: ["python", "-u", "run_all.py"]
+
+volumes:
+  db_dashboard-data:
