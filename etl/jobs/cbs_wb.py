@@ -1,37 +1,65 @@
-# from the github repository https://github.com/statistiekcbs/CBS-Open-Data-v4/tree/master/Python 
 import os
 import pandas as pd
+import cbsodata
 from sqlalchemy import create_engine
-from .cbs_utils import get_odata
 
-SPECIAL_NULLS = {99997: None, 99995: None, 99991: None}
-TABLE = "https://beta-odata4.cbs.nl/CBS/83765NED"
+TABLE_ID = "83765NED"                    # Kerncijfers wijken en buurten 2017
+PERIOD_DEFAULT = os.getenv("WB_PERIOD", "2017")  # set via env if you like
+
+def _pick_measure_col(df, meta):
+    preferred = [
+        "AantalInwoners_5",
+        "Bevolkingsdichtheid_33",        # note: index may differ by table year; we detect anyway below
+        "GemiddeldInkomenPerInwoner_66",
+    ]
+    for p in preferred:
+        if p in df.columns:
+            return p
+    if meta is not None and not meta.empty and {"Key","Type"}.issubset(meta.columns):
+        keys = meta.loc[meta["Type"].str.lower().eq("measure"), "Key"]
+        for k in keys:
+            if k in df.columns:
+                return k
+    for c in df.columns:                 # numeric fallback
+        if c not in {"WijkenEnBuurten","RegioS","RegioNaam","RegioCode"} and pd.api.types.is_numeric_dtype(df[c]):
+            return c
+    raise KeyError(f"No suitable measure column found. Columns: {list(df.columns)}")
 
 def run():
-    # Observations (demo limit with $top similar to their “basics” example)
-    obs = get_odata(f"{TABLE}/Observations?$top=5000&$select=WijkenEnBuurten,Perioden,Value,Measure,MeasureGroupId")
+    # 1) Full typed dataset; subset in pandas
+    data = pd.DataFrame(cbsodata.get_data(TABLE_ID))
 
-    # Metadata
-    codes  = get_odata(f"{TABLE}/MeasureCodes?$select=Identifier,Title")
-    groups = get_odata(f"{TABLE}/MeasureGroups?$select=Id,Title")
+    # 2) Region code column
+    if "WijkenEnBuurten" not in data.columns:
+        if "RegioS" in data.columns:
+            data = data.rename(columns={"RegioS": "WijkenEnBuurten"})
+        else:
+            raise KeyError(f"'WijkenEnBuurten' (or RegioS) not found. Columns: {list(data.columns)}")
 
-    # Joins to get human-friendly titles
-    obs = obs.merge(codes, left_on="Measure", right_on="Identifier", how="left")
-    obs = obs.merge(groups, left_on="MeasureGroupId", right_on="Id", how="left", suffixes=("", "_Group"))
+    # 3) Metadata for human-readable measure title (optional)
+    try:
+        meta = pd.DataFrame(cbsodata.get_meta(TABLE_ID, "DataProperties"))
+        title_map = dict(zip(meta.get("Key", []), meta.get("Title", [])))
+    except Exception:
+        meta, title_map = pd.DataFrame(), {}
 
-    # Clean up like CBS examples
-    obs["WijkenEnBuurten"] = obs["WijkenEnBuurten"].str.strip()
-    obs = obs.replace(SPECIAL_NULLS)
+    # 4) Pick one present measure
+    measure_col = _pick_measure_col(data, meta)
+    measure_title = title_map.get(measure_col, measure_col)
 
-    df = obs[["WijkenEnBuurten", "Perioden", "Value", "Title"]] \
-            .rename(columns={"Title": "MeasureName"})
+    # 5) Build your long-format rows; **no time column in this table → use constant**
+    df = data[["WijkenEnBuurten", measure_col]].copy()
+    df["Perioden"] = PERIOD_DEFAULT
+    df = df.rename(columns={measure_col: "Value"})
+    df["MeasureName"] = measure_title
+    df = df[["WijkenEnBuurten", "Perioden", "MeasureName", "Value"]].dropna(subset=["Value"])
 
-    url = f"postgresql+psycopg2://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@" \
-          f"{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    # 6) Load to Postgres
+    url = (
+        f"postgresql+psycopg2://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
+        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    )
     engine = create_engine(url, pool_pre_ping=True)
-
-    # Keep column names exactly as in DB DDL (quoted mixed-case)
     df.to_sql("wb_observations", engine, schema="cbs", if_exists="append",
               index=False, method="multi", chunksize=5000)
-
-    print(f"[ETL] Loaded {len(df)} WB rows")
+    print(f"[ETL] WB: loaded {len(df)} rows (Perioden='{PERIOD_DEFAULT}', measure='{measure_title}')")

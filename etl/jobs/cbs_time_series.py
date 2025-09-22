@@ -1,46 +1,57 @@
-# from the github repository https://github.com/statistiekcbs/CBS-Open-Data-v4/tree/master/Python  
-
+# etl/jobs/cbs_time_series.py
 import os, datetime
 import pandas as pd
+import cbsodata
 from sqlalchemy import create_engine
-from .cbs_utils import get_odata
 
-TABLE = "https://beta-odata4.cbs.nl/CBS/84120NED"
-# Example: pick one measure code via $filter (same style as CBS examples)
+TABLE_ID = "84120NED"
 FILTER = "BelastingenEnWettelijkePremies eq 'A045081'"
 
-def _parse_period(period: str):
-    # YYYY, YYYYMMNN, YYYYKWQQ → date + (year, freq, count) similar to CBS tutorials
-    if period.isdigit() and len(period) == 4:  # Year
-        return datetime.date(int(period), 1, 1), int(period), "Y", None
-    # Quarter: 2019KW01..04
-    if "KW" in period:
-        y = int(period[:4]); q = int(period[-2:])
+def _pick_time_col(cols):
+    for cand in ("Perioden", "Periods"):
+        if cand in cols:
+            return cand
+    for c in cols:
+        if c.lower().startswith("period"):
+            return c
+    raise KeyError(f"No time column found (Perioden/Periods). Columns: {list(cols)}")
+
+def _parse_period(p):
+    if not isinstance(p, str):
+        return None, None, None, None
+    if p.isdigit() and len(p) == 4:
+        y = int(p); return datetime.date(y,1,1), y, "Y", None
+    if "KW" in p:
+        y, q = int(p[:4]), int(p[-2:])
         return datetime.date(y, 3*(q-1)+1, 1), y, "Q", q
-    # Month: 2019MM01..12
-    if "MM" in period:
-        y = int(period[:4]); m = int(period[-2:])
+    if "MM" in p:
+        y, m = int(p[:4]), int(p[-2:])
         return datetime.date(y, m, 1), y, "M", m
     return None, None, None, None
 
 def run():
-    obs = get_odata(f"{TABLE}/Observations?$filter={FILTER}&$select=Perioden,Value")
+    rows = cbsodata.get_data(TABLE_ID, filters=FILTER)
+    df = pd.DataFrame(rows)
 
-    # Derive date parts
-    parsed = obs["Perioden"].apply(_parse_period)
-    obs["date"]      = parsed.apply(lambda x: x[0])
-    obs["year"]      = parsed.apply(lambda x: x[1])
-    obs["frequency"] = parsed.apply(lambda x: x[2])
-    obs["count"]     = parsed.apply(lambda x: x[3])
+    time_col = _pick_time_col(df.columns)
+    parsed = df[time_col].apply(_parse_period)
 
-    df = obs.rename(columns={"Perioden": "periodcode", "Value": "value"})[
+    df["date"]      = parsed.apply(lambda x: x[0])
+    df["year"]      = parsed.apply(lambda x: x[1])
+    df["frequency"] = parsed.apply(lambda x: x[2])
+    df["count"]     = parsed.apply(lambda x: x[3])
+
+    # rename to your DB columns; value column is 'Value' in v3
+    df = df.rename(columns={time_col: "periodcode", "Value": "value"})[
         ["periodcode", "value", "year", "frequency", "count", "date"]
-    ]
+    ].dropna(subset=["value"])
 
-    url = f"postgresql+psycopg2://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@" \
-          f"{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    url = (
+        f"postgresql+psycopg2://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
+        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    )
     engine = create_engine(url, pool_pre_ping=True)
-    df.to_sql("tourist_tax", engine, schema="cbs", if_exists="append",
-              index=False, method="multi", chunksize=5000)
+    df.to_sql("tourist_tax", engine, schema="cbs",
+              if_exists="append", index=False, method="multi", chunksize=5000)
 
-    print(f"[ETL] Loaded {len(df)} time series rows")
+    print(f"[ETL] Time series: loaded {len(df)} rows (time='{time_col}' → 'periodcode')")
