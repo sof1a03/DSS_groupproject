@@ -1,1 +1,7 @@
-psycopg[binary]==3.2.1
+pandas==2.2.2
+geopandas==1.0.1
+shapely==2.0.5
+pyproj==3.6.1
+requests==2.32.3
+sqlalchemy==2.0.32
+psycopg2-binary==2.9.9

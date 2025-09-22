@@ -1,4 +1,4 @@
-import psycopg
+import psycopg2
 
 DDL = """
 CREATE SCHEMA IF NOT EXISTS core;
@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS core.hello_etl (
 
 def smoke_test(conn_info: dict):
     dsn = "host={host} port={port} dbname={dbname} user={user} password={password}".format(**conn_info)
-    with psycopg.connect(dsn, autocommit=True) as conn:
+    with psycopg2.connect(dsn) as conn:
+        conn.autocommit = True
         with conn.cursor() as cur:
             cur.execute(DDL)
             cur.execute("INSERT INTO core.hello_etl (note) VALUES (%s)", ("hi from etl",))

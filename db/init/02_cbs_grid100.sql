@@ -1,9 +1,7 @@
-CREATE SCHEMA IF NOT EXISTS cbs;
-
 CREATE TABLE IF NOT EXISTS cbs.grid100 (
   id TEXT PRIMARY KEY,
   geom geometry(POLYGON, 4326),
-  raw jsonb,
+  raw  jsonb,
   inserted_at timestamptz DEFAULT now()
 );
 
