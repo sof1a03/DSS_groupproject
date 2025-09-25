@@ -22,7 +22,7 @@ from google.cloud import bigquery
 
 # ====== EDIT THESE ======
 PROJECT_ID = "compact-garage-473209-u4"
-DATASET_ID = "prova3"
+DATASET_ID = "CBS"
 
 # CBS base (OData v4)
 BASE = "https://datasets.cbs.nl/odata/v1/CBS/85318NED"
