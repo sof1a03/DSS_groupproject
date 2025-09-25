@@ -1,7 +1,7 @@
 import requests
 from google.cloud import bigquery
 
-# ====== CBS OData v4 (Wijken en Buurten 2024) ======
+# ====== CBS OData v4 (Wijken en Buurten 2024) ====== ciao
 BASE = "https://datasets.cbs.nl/odata/v1/CBS/85318NED"
 OBS_URL = f"{BASE}/Observations"
 MEASURECODES_URL = f"{BASE}/MeasureCodes?$select=Identifier,Title"
