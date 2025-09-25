@@ -4,6 +4,7 @@ CBS OData v4 (Wijken en Buurten 2024) -> BigQuery
 
 Tables created/loaded:
 - measure_codes               (from MeasureCodes)
+- wijken_en_buurten           (from WijkenEnBuurten)
 - wijken_en_buurten_groups    (from WijkenEnBuurtenGroups)
 - observations_raw            (from Observations)
 
@@ -22,12 +23,13 @@ from google.cloud import bigquery
 
 # ====== EDIT THESE ======
 PROJECT_ID = "compact-garage-473209-u4"
-DATASET_ID = "CBS"
+DATASET_ID = "CBS1"
 
 # CBS base (OData v4)
 BASE = "https://datasets.cbs.nl/odata/v1/CBS/85318NED"
-MEASURECODES_URL = f"{BASE}/MeasureCodes"                     # we'll read all columns, then select
-AREAGROUPS_URL   = f"{BASE}/WijkenEnBuurtenGroups"            # IMPORTANT: no $select (schema differs)
+MEASURECODES_URL = f"{BASE}/MeasureCodes"
+WIJKEN_URL       = f"{BASE}/WijkenEnBuurten"
+AREAGROUPS_URL   = f"{BASE}/WijkenEnBuurtenGroups"
 OBS_URL          = f"{BASE}/Observations"
 
 # HTTP headers
@@ -37,8 +39,8 @@ HEADERS = {
 }
 
 # Tuning
-OBS_PAGE_LIMIT = 10000          # rows per Observations page
-BATCH_UPLOAD_SIZE = 20000       # rows per BQ load for observations
+OBS_PAGE_LIMIT = 10000
+BATCH_UPLOAD_SIZE = 20000
 
 # Optional env
 CBS_PERIOD_FILTER = os.getenv("CBS_PERIOD_FILTER", "").strip()
@@ -65,7 +67,6 @@ BQ = bigquery.Client(project=PROJECT_ID)
 
 # ====== Helpers ======
 def get_odata_all(url: str) -> list[dict]:
-    """Fetch ALL rows from an OData v4 entity using @odata.nextLink."""
     rows: list[dict] = []
     next_url = url
     while next_url:
@@ -77,7 +78,6 @@ def get_odata_all(url: str) -> list[dict]:
     return rows
 
 def iter_odata_pages(url: str) -> t.Iterator[list[dict]]:
-    """Generator yielding pages (list[dict]) for large entities like Observations."""
     next_url = url
     while next_url:
         r = SESSION.get(next_url, headers=HEADERS, timeout=300)
@@ -140,7 +140,6 @@ def main() -> None:
     print("[CBS] Fetching MeasureCodes...")
     measure_codes_raw = get_odata_all(MEASURECODES_URL)
 
-    # Select only the columns we care about
     measures_rows = [
         {"identifier": m.get("Identifier"), "title": m.get("Title")}
         for m in measure_codes_raw if m.get("Identifier")
@@ -160,7 +159,32 @@ def main() -> None:
     )
     print("[CBS] MeasureCodes -> BigQuery DONE")
 
-    # ---------- 2) WijkenEnBuurtenGroups ----------
+    # ---------- 2) WijkenEnBuurten ----------
+    print("[CBS] Fetching WijkenEnBuurten...")
+    wijken = get_odata_all(WIJKEN_URL)
+
+    if wijken:
+        print("[DEBUG] Example keys for WijkenEnBuurten:", sorted(wijken[0].keys()))
+
+    wijken_rows = [
+        {"identifier": w.get("Identifier"), "title": w.get("Title")}
+        for w in wijken if w.get("Identifier")
+    ]
+
+    wijken_schema = [
+        bigquery.SchemaField("identifier", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("title", "STRING"),
+    ]
+
+    load_json_chunks_to_bq(
+        wijken_rows,
+        f"{dataset_ref}.wijken_en_buurten",
+        schema=wijken_schema,
+        write_disposition="WRITE_TRUNCATE" if BQ_WRITE_MODE != "WRITE_APPEND" else "WRITE_APPEND",
+    )
+    print("[CBS] WijkenEnBuurten -> BigQuery DONE")
+
+    # ---------- 3) WijkenEnBuurtenGroups ----------
     print("[CBS] Fetching WijkenEnBuurtenGroups (ALL members)...")
     area_groups = get_odata_all(AREAGROUPS_URL)
 
@@ -168,7 +192,6 @@ def main() -> None:
         print("[DEBUG] Example keys for WijkenEnBuurtenGroups:", sorted(area_groups[0].keys()))
 
     def _parent_id(row: dict) -> str | None:
-        # Defensively try common variants; schema can differ across tables.
         return (
             row.get("ParentIdentifier")
             or row.get("ParentId")
@@ -211,17 +234,15 @@ def main() -> None:
     )
     print("[CBS] WijkenEnBuurtenGroups -> BigQuery DONE")
 
-    # ---------- 3) Observations (paged) ----------
+    # ---------- 4) Observations (paged) ----------
     obs_url = f"{OBS_URL}?$top={OBS_PAGE_LIMIT}"
     if CBS_PERIOD_FILTER:
-        # Try both Dutch and English period column names (only one will exist on server).
         period = CBS_PERIOD_FILTER.replace("'", "''")
         obs_url += f"&$filter=Periods eq '{period}' or Perioden eq '{period}'"
 
     print(f"[CBS] Fetching Observations (paged) from:\n{obs_url}")
     raw_pages = iter_odata_pages(obs_url)
 
-    # Normalize each page into a consistent schema:
     def normalized_pages():
         detected_period_key = None
         for page in raw_pages:
