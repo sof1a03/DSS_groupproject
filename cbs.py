@@ -4,8 +4,7 @@ CBS OData v4 (Wijken en Buurten 2024) -> BigQuery
 
 Tables created/loaded:
 - measure_codes               (from MeasureCodes)
-- wijken_en_buurten           (from WijkenEnBuurten)
-- wijken_en_buurten_groups    (from WijkenEnBuurtenGroups)
+- wijken_en_buurten_codes     (from WijkenEnBuurtenCodes)
 - observations_raw            (from Observations)
 
 Env (optional):
@@ -23,14 +22,13 @@ from google.cloud import bigquery
 
 # ====== EDIT THESE ======
 PROJECT_ID = "compact-garage-473209-u4"
-DATASET_ID = "CBS1"
+DATASET_ID = "CBS"
 
 # CBS base (OData v4)
 BASE = "https://datasets.cbs.nl/odata/v1/CBS/85318NED"
-MEASURECODES_URL = f"{BASE}/MeasureCodes"
-WIJKEN_URL       = f"{BASE}/WijkenEnBuurten"
-AREAGROUPS_URL   = f"{BASE}/WijkenEnBuurtenGroups"
 OBS_URL          = f"{BASE}/Observations"
+MEASURECODES_URL = f"{BASE}/MeasureCodes?$select=Identifier,Title"
+AREACODES_URL    = f"{BASE}/WijkenEnBuurtenCodes?$select=Identifier,Title"
 
 # HTTP headers
 HEADERS = {
@@ -39,7 +37,6 @@ HEADERS = {
 }
 
 # Tuning
-OBS_PAGE_LIMIT = 10000
 BATCH_UPLOAD_SIZE = 20000
 
 # Optional env
@@ -159,86 +156,34 @@ def main() -> None:
     )
     print("[CBS] MeasureCodes -> BigQuery DONE")
 
-    # ---------- 2) WijkenEnBuurten ----------
-    print("[CBS] Fetching WijkenEnBuurten...")
-    wijken = get_odata_all(WIJKEN_URL)
+    # ---------- 2) WijkenEnBuurtenCodes ----------
+    print("[CBS] Fetching WijkenEnBuurtenCodes...")
+    area_codes_raw = get_odata_all(AREACODES_URL)
 
-    if wijken:
-        print("[DEBUG] Example keys for WijkenEnBuurten:", sorted(wijken[0].keys()))
-
-    wijken_rows = [
-        {"identifier": w.get("Identifier"), "title": w.get("Title")}
-        for w in wijken if w.get("Identifier")
+    area_codes_rows = [
+        {"identifier": a.get("Identifier"), "title": a.get("Title")}
+        for a in area_codes_raw if a.get("Identifier")
     ]
+    print(f"[CBS] WijkenEnBuurtenCodes rows: {len(area_codes_rows)}")
 
-    wijken_schema = [
+    area_codes_schema = [
         bigquery.SchemaField("identifier", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("title", "STRING"),
     ]
 
     load_json_chunks_to_bq(
-        wijken_rows,
-        f"{dataset_ref}.wijken_en_buurten",
-        schema=wijken_schema,
+        area_codes_rows,
+        f"{dataset_ref}.wijken_en_buurten_codes",
+        schema=area_codes_schema,
         write_disposition="WRITE_TRUNCATE" if BQ_WRITE_MODE != "WRITE_APPEND" else "WRITE_APPEND",
     )
-    print("[CBS] WijkenEnBuurten -> BigQuery DONE")
+    print("[CBS] WijkenEnBuurtenCodes -> BigQuery DONE")
 
-    # ---------- 3) WijkenEnBuurtenGroups ----------
-    print("[CBS] Fetching WijkenEnBuurtenGroups (ALL members)...")
-    area_groups = get_odata_all(AREAGROUPS_URL)
-
-    if area_groups:
-        print("[DEBUG] Example keys for WijkenEnBuurtenGroups:", sorted(area_groups[0].keys()))
-
-    def _parent_id(row: dict) -> str | None:
-        return (
-            row.get("ParentIdentifier")
-            or row.get("ParentId")
-            or row.get("Parent")
-            or row.get("Parent_Code")
-            or row.get("ParentIdentifierKey")
-            or None
-        )
-
-    areas_rows = []
-    for a in area_groups:
-        ident = a.get("Identifier")
-        if not ident:
-            continue
-        level = ("GM" if str(ident).startswith("GM")
-                 else "WK" if str(ident).startswith("WK")
-                 else "BU" if str(ident).startswith("BU")
-                 else None)
-        areas_rows.append({
-            "identifier": ident,
-            "title": a.get("Title"),
-            "parent_identifier": _parent_id(a),
-            "level": level
-        })
-
-    print(f"[CBS] WijkenEnBuurtenGroups rows: {len(areas_rows)}")
-
-    areas_schema = [
-        bigquery.SchemaField("identifier", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("title", "STRING"),
-        bigquery.SchemaField("parent_identifier", "STRING"),
-        bigquery.SchemaField("level", "STRING"),
-    ]
-
-    load_json_chunks_to_bq(
-        areas_rows,
-        f"{dataset_ref}.wijken_en_buurten_groups",
-        schema=areas_schema,
-        write_disposition="WRITE_TRUNCATE" if BQ_WRITE_MODE != "WRITE_APPEND" else "WRITE_APPEND",
-    )
-    print("[CBS] WijkenEnBuurtenGroups -> BigQuery DONE")
-
-    # ---------- 4) Observations (paged) ----------
-    obs_url = f"{OBS_URL}?$top={OBS_PAGE_LIMIT}"
+    # ---------- 3) Observations (paged) ----------
+    obs_url = OBS_URL
     if CBS_PERIOD_FILTER:
         period = CBS_PERIOD_FILTER.replace("'", "''")
-        obs_url += f"&$filter=Periods eq '{period}' or Perioden eq '{period}'"
+        obs_url += f"?$filter=Periods eq '{period}' or Perioden eq '{period}'"
 
     print(f"[CBS] Fetching Observations (paged) from:\n{obs_url}")
     raw_pages = iter_odata_pages(obs_url)
