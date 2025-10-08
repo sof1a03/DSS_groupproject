@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "compact-garage-473209-u4",
+  "private_key_id": "4acbce0163488e1012b22673498c8bd2157d9367",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDbXeceenjCl3uQ\nVhrCKU2IkQP5pROAm5skrIc31bAr3hJ9N1zpvGU3D+1Cdfr3W7IZ/kUad2L1PqhZ\n9TtU31EAs4UaxYXILYOULYlQ61v04NN1u/ucQ1Lsh/uWvOhCpzg1ZyOHccTX0Yat\nff90klNDlVY/yPiWk/vbnkWQghK2YPAd96rppOuJeLry/G51zEl82F+bON4Kp+0r\niz1MouUIoTTivQX9hXje6PO4PaKjwTb9ZimZxwgB1NQf/R3Op5VgavkBJ5PvBYhj\n5QvM6Um5Fft2yt+GzVbm+oTdQxhsiqW9U8y83/j5fVD2AMlAZLZLlCfLn6tDn22t\nvwVD2jXZAgMBAAECggEAWJIgiBjQ+1ioZk2tvilpCbPrk/eH2Ux6pqMWcX/RAtVG\nR9J7rFAJ2eKPXF9AdnFKht44TohXp0emN7QhQZJtJUhWfMm1y249Cy4bnFV7KnNA\nTfAZli1EpQX+mg0qBgd4VW+QU9amsLEDnLcb1phiEA6S5WwimsGjVjggREmQfpwD\nk0slu05o6Djms82clUBJ9Pwk044NujtmS8LzJxlPIVKutjChFUrG7OWGHOe5bRDh\n5U2SYzVo00VarmEn2bRFmAVoLrp0bJhxtsB5aYgk8HAPALfYQsf90IFCT1rPiadU\nfoeFwOXqsDD32YgxFz9cxszCq+IRZQBT25ArsXyV1QKBgQD6DCi4DDI4oH0fW/tD\ncbt8AkMj3xSuejIbNpeSdn7HsYE7L3+0Mqbu0kHHMarCv6i1tm0eU+TfOoNiV7E3\nGtA0GqnaTRNktwrCE0LCqwG59E6IH9p5v+bCUSl9+D9/hEd8Zk4gJIOasYKw54k2\nGj85i0tokaMkb9ktHFrfmN/U8wKBgQDglsTx5Kd9vfE8wKGjG7OzqhCih9dvMQTY\nNICC3sQwRvDq8Bvhoqm2uGR3pRlFaKUHdl0/PMqQBP3464X5xcRnuP0cObVI4BFQ\nQ2+ZSVymHv6ysO8NkUMfPKyESAXcuMpQfpTdjefe3Y1IRh11m7BJ7cTeI+5K6WPk\nSuHgPwQtAwKBgQCYhOglc1MC1WncwfdeaTYp6xtW+xCbaG+9x6vmq56jYfNozY1A\nthC65cc3oGT/S3a1+CNQ921IeGGBj+nJqfJLheQLAy6MJVZLkQIMydBQw+NPBtb1\nooc4CdecPdtFhcMw7xpCYuNfbV1BWMmKFbJxADUsAIGZjRvUd1I6xv3o3wKBgBcM\noi3JL79h7Q41HuGkiC7aN1bW5i9NMpgV21KTFkN2JGeYOORRU2WjSvxUf2F2Oemo\nJi3FSWy6dm5Djb5yo5OZkrCA47AU/vHj2eI7ezy5VZ51NjOIQwFDstjoo2FhvbHB\nK/oJBFEFH+jY+VEGp3MO6fN6cIxTo6LcZI4lKYKNAoGAM6bfjET4il1T2MiDewm5\n/j8PDICuwuaQjGrJEz9uIlMV16P0mPBzd39IS2yG+e6582Iey17D6JJW7HSRZCS9\n3lOHSsb0TtxfxlR4xDeX8LTMEkVYskyakrAopz4CBba0JkHyjdOgE7IqSdQR/U9T\nThquNsF0pzBXEqvlnjI2VKE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "streamlit-bigquery-access@compact-garage-473209-u4.iam.gserviceaccount.com",
+  "client_id": "115634517369122779800",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/streamlit-bigquery-access%40compact-garage-473209-u4.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
