@@ -30,3 +30,21 @@ Run all cells to view distributions and `body_*` dummies. Export `rdw_classified
 Load `df_cleaned_FINAL.csv`, engineer `avg_price`, `fuel_bucket`, `intro_year`, share metrics, and build EDA (missingness, distributions, new vs continuing, scatterplots), brand HHI, clustering, naive 2-year brand forecasts, and Spearman correlations. Adjust `CSV` and `YEAR_START/YEAR_END`, then run all cells; plots render inline and tables show key summaries. Use insights to validate classification rules and spot price/segment trends.
 
 The final dataset was added to our **BigQuery** project environment.
+
+## BigQuery — Load Examples (RDW)
+
+```bash
+# 0) Set project & create dataset (once)
+gcloud config set project YOUR_PROJECT_ID
+bq mk --location=EU RDW
+
+# Load final CLASSIFIED table (from RDW_classification.ipynb)
+#    rdw_classified.csv
+bq load \
+  --location=EU \
+  --autodetect \
+  --skip_leading_rows=1 \
+  --source_format=CSV \
+  RDW.rdw_classified \
+  ./rdw_classified.csv
+
