@@ -1,4 +1,4 @@
-We are building a personalized database of car models using the free **Dutch registered vehicles dataset (RDW)**. 
+We are building a personalized database of car models using the free *Dutch registered vehicles dataset (RDW)*. 
 Source: https://opendata.rdw.nl/Voertuigen/Open-Data-RDW-Gekentekende_voertuigen/m9d7-ebf2/about_data.
 
 ### rdw_extraction.ipynb
