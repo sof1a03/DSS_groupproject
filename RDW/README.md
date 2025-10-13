@@ -1,4 +1,4 @@
-We are building a personalized database of car models using the free *Dutch registered vehicles dataset (RDW)*. 
+We are building a personalized database of car models using the free **Dutch registered vehicles dataset (RDW)**. 
 Source: https://opendata.rdw.nl/Voertuigen/Open-Data-RDW-Gekentekende_voertuigen/m9d7-ebf2/about_data.
 
 ### rdw_extraction.ipynb
@@ -7,7 +7,9 @@ Fetch RDW vehicles/fuels via Socrata, engineer fields, and optionally enrich wit
 For image_url Google API searches, you need two credentials: a Custom Search API key and a Custom Search Engine (CSE) ID. Follow the steps below to set them up.
 
 Create a Google Cloud project → enable “Custom Search API” → go to **APIs & Services → Credentials** and create an **API key** (this is your `GOOGLE_API_KEY`). 
+
 At https://cse.google.com/cse/ create a Custom Search Engine (choose “Search the entire web” or add specific sites) and copy its **Search engine ID** (`GOOGLE_CSE_ID`).  
+
 Set them in your environment/Colab (e.g., `os.environ["GOOGLE_API_KEY"]="..."`; `os.environ["GOOGLE_CSE_ID"]="..."`) or I can provide both keys in an encrypted file if needed.
 
                                                                                                                    
