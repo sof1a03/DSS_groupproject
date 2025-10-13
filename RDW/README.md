@@ -34,17 +34,9 @@ The final dataset was added to our **BigQuery** project environment.
 ## BigQuery — Load Examples (RDW)
 
 ```bash
-# 0) Set project & create dataset (once)
 gcloud config set project YOUR_PROJECT_ID
 bq mk --location=EU RDW
 
-# Load final CLASSIFIED table (from RDW_classification.ipynb)
-#    rdw_classified.csv
-bq load \
-  --location=EU \
-  --autodetect \
-  --skip_leading_rows=1 \
-  --source_format=CSV \
-  RDW.rdw_classified \
-  ./rdw_classified.csv
+bq load --autodetect --source_format=CSV RDW.rdw_classified ./rdw_classified.csv
+
 
