@@ -24,14 +24,16 @@ Set them in your environment/Colab (e.g., `os.environ["GOOGLE_API_KEY"]="..."`; 
 ### 02_RDW_cleaning.ipynb
 Load the aggregated CSV, drop coachbuilders/low-frequency brands, and normalize/dedupe model names per brand. Run all cells to print before/after counts and preserve original metrics. 
 
-Save the cleaned table to `df_cleaned_FINAL.csv`.
+Save the cleaned table to df_cleaned_FINAL.csv.
 
 ---
 
 ### 03_RDW_classification.ipynb
 Read `df_cleaned_FINAL.csv`, filter non-passenger body types, one-hot encode fuels, compute clipped Z-score price, and classify into SUV/MPV/Sports/Compact/Medium/Large using mass/length heuristics. 
 
-Run all cells to view distributions and `body_*` dummies. Export `rdw_classified.csv` for downstream use.
+**Output**: [RDW.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/RDW.csv)
+
+Run all cells to view distributions and `body_*` dummies. Export [RDW.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/RDW.csv) for downstream use.
 
 ---
 
