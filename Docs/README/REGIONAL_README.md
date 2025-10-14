@@ -63,7 +63,7 @@ The process consists of four main stages:
 
 **Create** PC6→PC4→Buurt/Wijk/Gemeente conversion tables.
 
-- **Inputs:** [CBS_BUURT2025.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_BUURT2025.csv) [CBS_GEM2025.csv], (https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_GEM2025.csv),  [CBS_WIJK2025](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_WIJK2025.csv) , [CONVERSION_PC6_HEAD_100](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CONVERSION_PC6_HEAD_100.csv)
+- **Inputs:** [CBS_BUURT2025.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_BUURT2025.csv), [CBS_GEM2025.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_GEM2025.csv),  [CBS_WIJK2025](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_WIJK2025.csv) , [CONVERSION_PC6_HEAD_100](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CONVERSION_PC6_HEAD_100.csv)
 
 - **Run:**
  ```bash
