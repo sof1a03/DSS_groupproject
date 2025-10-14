@@ -32,6 +32,7 @@ The process consists of four main stages:
 - **Run:**  
   ```bash
   python 01_REGIONAL_extr_transf.py
+  ```
 - **Output:** data_intermediate/cbs_pc4_2023.csv
 
 ### 02_PC4_REGIONAL_cleaning.py
@@ -43,7 +44,7 @@ The process consists of four main stages:
 - **Run**:
  ```bash
   python 02_PC4_REGIONAL_cleaning.py
-
+  ```
 - **Output:** data_clean/fact_pc4.csv
 
 ### 02_NBH_REGIONAL_cleaning.py
@@ -55,7 +56,7 @@ The process consists of four main stages:
 - **Run:**
  ```bash
  python 02_NBH_REGIONAL_cleaning.py
-
+  ```
 - **Output:** data_clean/fact_neighbourhoods.csv
 
 ### 02_REGIONAL_cleaning.py
@@ -69,7 +70,7 @@ data_raw/key_conversion/gem_2025.csv, wijk_2025.csv, buurt_2025.csv
 - **Run:**
  ```bash
  python 02_REGIONAL_cleaning.py
-
+```
 - **Output:** data_clean/pc6-conversion.csv
 
 ### 03_REGIONAL_load.py
@@ -81,7 +82,7 @@ data_raw/key_conversion/gem_2025.csv, wijk_2025.csv, buurt_2025.csv
 - **Run:**
  ```bash
  python 03_REGIONAL_load.py
-
+```
 - **Output:** 
 
 
