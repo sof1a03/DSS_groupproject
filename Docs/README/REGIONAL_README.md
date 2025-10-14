@@ -28,62 +28,64 @@ The process consists of four main stages:
 ### 01_REGIONAL_extr_transf.py
 **Extract** PC4-level geodata from CBS GeoPackage and convert it into CSV for downstream processing.
 
-- **Input:** `data_raw/cbs_pc4_2023.gpkg`
+- **Input:** [CBS_PC4](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_PC4)
 - **Run:**  
   ```bash
   python 01_REGIONAL_extr_transf.py
   ```
-- **Output:** data_intermediate/cbs_pc4_2023.csv
+- **Output:** [CBS_NBH_HEAD_10.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Geo/CBS_NBH_HEAD_10.csv)
 
 ### 02_PC4_REGIONAL_cleaning.py
 
 **Clean and prepare** PC4-level CBS indicators for integration. Selects demographic, housing, and income indicators. Replaces sentinel NA values and drops unused columns. Prepares data for merging.
 
-- **Input**: data_intermediate/cbs_pc4_2023.csv
+- **Input**: [CBS_NBH_HEAD_10.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Geo/CBS_NBH_HEAD_10.csv)
 
 - **Run**:
  ```bash
   python 02_PC4_REGIONAL_cleaning.py
   ```
-- **Output:** data_clean/fact_pc4.csv
+- **Output:** [CBS_PC4.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CBS_PC4.csv)
 
 ### 02_NBH_REGIONAL_cleaning.py
 
 **Process neighbourhood-level (Buurt)** data from CBS Kerncijfers. Filters neighbourhood records. Extracts indicators like WOZ value, household size, and urbanization. Handles NA values and prepares GEO join keys.
 
-- **Input:** data_raw/cbs_kwb_2024.csv
+- **Input:** [CBS_NBH.xlsx](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_NBH.xlsx)
 
 - **Run:**
  ```bash
  python 02_NBH_REGIONAL_cleaning.py
   ```
-- **Output:** data_clean/fact_neighbourhoods.csv
+- **Output:** [CBS_NBH.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CBS_NBH.csv)
 
 ### 02_REGIONAL_cleaning.py
 
 **Create** PC6→PC4→Buurt/Wijk/Gemeente conversion tables.
 
-- **Inputs:** data_raw/key_conversion/pc6-conversion.csv 
-
-data_raw/key_conversion/gem_2025.csv, wijk_2025.csv, buurt_2025.csv
+- **Inputs:** [CBS_BUURT2025.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_BUURT2025.csv) [CBS_GEM2025.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_GEM2025.csv) [CBS_WIJK2025](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_WIJK2025.csv) [CONVERSION_PC6_HEAD_100](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CONVERSION_PC6_HEAD_100.csv)
 
 - **Run:**
  ```bash
  python 02_REGIONAL_cleaning.py
 ```
-- **Output:** data_clean/pc6-conversion.csv
+- **Output:** [CONVERSION_PC4_NBH_HEAD_100.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CONVERSION_PC4_NBH_HEAD_100.csv) 
 
 ### 03_REGIONAL_load.py
 
 **Integrate all components** — PC4, NBH, and KiM — into the final REGIONAL dataset. Merges datasets using shared keys. Converts counts to proportions (e.g., age distribution). Renames columns  to English. Applies Z-standardization to all continuous variables. Merge all into a single table. 
 
-- **Inputs:** data_clean/fact_pc4.csv and data_clean/fact_neighbourhoods.csv and data_clean/fact_kim.csv (hand-processed KiM data)
+- **Inputs:**
+[CBS_NBH.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CBS_NBH.csv)
+[CBS_PC4.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CBS_PC4.csv)
+[KIM.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/KIM.csv)
+[CONVERSION_PC4_NBH_HEAD_100.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CONVERSION_PC4_NBH_HEAD_100.csv) 
 
 - **Run:**
  ```bash
  python 03_REGIONAL_load.py
 ```
-- **Output:** 
+- **Output:** [REGIONAL.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/REGIONAL.csv)
 
 
 
