@@ -42,13 +42,13 @@ The **Load** phase exports the final tables to BigQuery and populates the dashbo
 
 1. **Vehicle Search and Model Details**  
    - **CSF/KPI:** Data completeness, quality, and market dynamics.  
-   - **Data Source:** RDW vehicle dataset (`RDW.rdw_classified`, BigQuery).  
+   - **Data Source:** [RDW](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/RDW.csv) vehicle dataset (`RDW.rdw_classified`, BigQuery).  
    - **Computation:** Queries car specs (fuel type, mass, average price) directly; no derived KPI yet.  
    - **Code File:**  [main.py](https://github.com/sof1a03/DSS_groupproject/blob/main/Code/App/main.py) (functions `get_unique_brands()`, `get_car_details()`).  
 
 2. **Neighbourhood Map (Geo Layer)**  
    - **CSF/KPI:** Data consistency, look-alike matching (future).  
-   - **Data Source:** CBS GeoPackage 2023 (`MAP.geo_neighbourhoods`).  
+   - **Data Source:** [CBS GeoPackage 2023](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Geo/CBS_NBH_HEAD_10.csv) (`MAP.geo_neighbourhoods`).  
    - **Computation:** Loads and converts geometries to WGS84; color intensity currently random.  
    - **Code File:**  [main.py](https://github.com/sof1a03/DSS_groupproject/blob/main/Code/App/main.py) (`query_map_geometry()` and PyDeck `GeoJsonLayer`).  
 
