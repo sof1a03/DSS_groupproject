@@ -12,43 +12,43 @@ Final databases in **BigQuery**:
 
 ## Scripts
 
-### `0_convert_gpkg_csv.py`
+### `01_REGIONAL_extr_transf.py`
 Convert CBS GeoPackage to a flat CSV for BigQuery.
 
 - **Input:** `data_raw/cbs_pc6_2023.gpkg`
-- **Run:** `python 0_convert_gpkg_csv.py`
+- **Run:** `python 01_REGIONAL_extr_transf.py`
 - **What it does:** Reads the GeoPackage, selects key demographic/housing columns, flattens geometry.
 - **Output (for MAP):** `./cbs_pc6_2023.csv` (heatmap base)
 
 ---
 
-### `1_create_conversion_table.py`
+### `02_REGIONAL_cleaning.py`
 Build a **PC6→PC4→(buurt/wijk/gemeente)** conversion table with names.
 
 - **Inputs:**  
   `data_raw/key_conversion/pc6-conversion.csv`,  
   `data_raw/key_conversion/gem_2025.csv`, `wijk_2025.csv`, `buurt_2025.csv`
-- **Run:** `python 1_create_conversion_table.py`
+- **Run:** `python 02_REGIONAL_cleaning.py`
 - **What it does:** Deduplicates PC6, derives `pc4 = pc6[:4]`, merges admin **codes + names**, cleans NAs.
 - **Output (for MAP):** `data_clean/pc6-conversion.csv`
 
 ---
 
-### `1_preprocess_neighbourhood.py`
+### `02_NBH_REGIONAL_cleaning.py`
 Extract **neighbourhood** (“Buurt”) facts from CBS KWB.
 
 - **Input:** `data_raw/cbs-kwb-2024.csv`
-- **Run:** `python 1_preprocess_neighbourhood.py`
+- **Run:** `python 02_NBH_REGIONAL_cleaning.py`
 - **What it does:** Filters to `recs == 'Buurt'`, selects indicators (WOZ, household size, urbanization), normalizes NAs.
 - **Output (for REGIONAL):** `data_clean/fact_neighbourhoods.csv`
 
 ---
 
-### `1_preprocess_pc4.py`
+### `02_PC4_REGIONAL_cleaning.py`
 Prepare **PC4**-level CBS indicators.
 
 - **Input:** `data_raw/cbs_pc4_2023.csv`
-- **Run:** `python 1_preprocess_pc4.py`
+- **Run:** `python 02_PC4_REGIONAL_cleaning.py`
 - **What it does:** Selects PC4 columns (population, age groups, housing, income), replaces CBS NA sentinels, drops geometry.
 - **Outputs (for REGIONAL):**  
   `data_clean/fact_pc4.csv`  
@@ -56,14 +56,14 @@ Prepare **PC4**-level CBS indicators.
 
 ---
 
-### `2_create_final_dataset.py`
+### `03_REGIONAL_classification.py`
 Create **final, standardized** CSVs for BigQuery (with `std_` Z-scores).
 
 - **Inputs:**  
   `data_clean/fact_pc4.csv` (CBS),  
   `data_clean/fact_neighbourhoods.csv` (CBS),  
   `data_clean/fact_kim.csv` (**KiM**, PC4-level fleet & income)
-- **Run:** `python 2_create_final_dataset.py`
+- **Run:** `python 03_REGIONAL_classification.py`
 - **What it does:**  
   - PC4: convert age **counts → proportions** of total inhabitants; rename to English; Z-score (`std_`*).  
   - Neighbourhood: rename (WOZ, household size, urbanization); Z-score.  
