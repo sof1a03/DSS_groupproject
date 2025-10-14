@@ -24,6 +24,7 @@ To run the frontend:
         - Kerncijfers Wijken en Buurten (2024)
             [link](https://www.cbs.nl/nl-nl/maatwerk/2025/38/kerncijfers-wijken-en-buurten-2024)
         - Kerncijfers Postcode 4 (2024) [link](https://www.cbs.nl/nl-nl/longread/diversen/2023/statistische-gegevens-per-vierkant-en-postcode-2022-2021-2020-2019)
+        - Buurt, Wijk en Gemeente (2023) voor Postcode + Huisnummer [link](https://www.cbs.nl/nl-nl/maatwerk/2023/35/buurt-wijk-en-gemeente-2023-voor-postcode-huisnummer)
     - KiM   Kennisinstituut Mobilitiet, Ministerie van Infrastructuur en Waterstaat
             Atlas van de Auto (2024)
             [link](https://www.kimnet.nl/atlas-van-de-auto#auto-op-de-kaart)
