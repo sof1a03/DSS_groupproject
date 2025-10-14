@@ -1,5 +1,4 @@
 # Preprocess CBS demographic data for Postal code 4
-
 import pandas as pd
 
 # Load data, set NA values
