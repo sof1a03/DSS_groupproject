@@ -38,8 +38,9 @@ The **Extract** phase retrieves raw records and the **Transform** phase cleans, 
 
 The **Load** phase exports the final tables to BigQuery and populates the dashboard via Dockerised Streamlit components.
 
-Data Sources
+## Data Sources
 	1. Netherlands Population Register (CBS) - Population_country_of_origin_country_of_birth_1_January_09102024_110602.csv
+	
 	2. Consumption Expenditure of households (CBS)* - After Cleaning - Consumption_110637_mark_cleaned.csv
 	
 	* Consumption expenditure was not mentioned in Concept Report
