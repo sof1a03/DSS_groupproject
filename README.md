@@ -15,20 +15,9 @@ To run the frontend:
 ### Links:
 - Codebase: [GitHub](https://github.com/sof1a03/DSS_groupproject/tree/main)
 - Datasets: 
-    - RDW   Rijksdienst Wegverkeer
-            Gekentekende Voertuigen (2025)
-            [link](https://opendata.rdw.nl/Voertuigen/Open-Data-RDW-Gekentekende_voertuigen/m9d7-ebf2/about_data)
-      
-    - CBS   Centraal Bureau voor de Statistiek
-        
-        - Kerncijfers Wijken en Buurten (2024)
-            [link](https://www.cbs.nl/nl-nl/maatwerk/2025/38/kerncijfers-wijken-en-buurten-2024)
-        - Kerncijfers Postcode 4 (2024) [link](https://www.cbs.nl/nl-nl/longread/diversen/2023/statistische-gegevens-per-vierkant-en-postcode-2022-2021-2020-2019)
-        - Buurt, Wijk en Gemeente (2023) voor Postcode + Huisnummer [link](https://www.cbs.nl/nl-nl/maatwerk/2023/35/buurt-wijk-en-gemeente-2023-voor-postcode-huisnummer)
-    - KiM   Kennisinstituut Mobilitiet, Ministerie van Infrastructuur en Waterstaat
-            Atlas van de Auto (2024)
-            [link](https://www.kimnet.nl/atlas-van-de-auto#auto-op-de-kaart)
-
+	- [RDW](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/RDW.csv)
+   	- [REGIONAL] (https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/REGIONAL.csv)
+   	- [GEO] (https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Geo/CBS_NBH_HEAD_10.csv) 
 
 ## Data Collection and Preparation
 
@@ -40,11 +29,18 @@ The **Extract** phase retrieves raw records and the **Transform** phase cleans, 
 The **Load** phase exports the final tables to BigQuery and populates the dashboard via Dockerised Streamlit components.
 
 ## Data Sources
-	1. Netherlands Population Register (CBS) - Population_country_of_origin_country_of_birth_1_January_09102024_110602.csv
-	
-	2. Consumption Expenditure of households (CBS)* - After Cleaning - Consumption_110637_mark_cleaned.csv
-	
-	* Consumption expenditure was not mentioned in Concept Report
+    - RDW   Rijksdienst Wegverkeer
+            Gekentekende Voertuigen (2025)
+            [link](https://opendata.rdw.nl/Voertuigen/Open-Data-RDW-Gekentekende_voertuigen/m9d7-ebf2/about_data)
+      
+    - CBS   Centraal Bureau voor de Statistiek
+        - Kerncijfers Wijken en Buurten (2024)
+            [link](https://www.cbs.nl/nl-nl/maatwerk/2025/38/kerncijfers-wijken-en-buurten-2024)
+        - Kerncijfers Postcode 4 (2024) [link](https://www.cbs.nl/nl-nl/longread/diversen/2023/statistische-gegevens-per-vierkant-en-postcode-2022-2021-2020-2019)
+        - Buurt, Wijk en Gemeente (2023) voor Postcode + Huisnummer [link](https://www.cbs.nl/nl-nl/maatwerk/2023/35/buurt-wijk-en-gemeente-2023-voor-postcode-huisnummer)
+    - KiM   Kennisinstituut Mobilitiet, Ministerie van Infrastructuur en Waterstaat
+            Atlas van de Auto (2024)
+            [link](https://www.kimnet.nl/atlas-van-de-auto#auto-op-de-kaart)
 
 ## Existing Indicators and Visualizations (50-150 words)
 
