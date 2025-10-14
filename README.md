@@ -17,18 +17,17 @@ To run the frontend:
 - Datasets: 
     - RDW   Rijksdienst Wegverkeer
             Gekentekende Voertuigen (2025)
-            https://opendata.rdw.nl/Voertuigen/Open-Data-RDW-Gekentekende_voertuigen/m9d7-ebf2/about_data
+            [link](https://opendata.rdw.nl/Voertuigen/Open-Data-RDW-Gekentekende_voertuigen/m9d7-ebf2/about_data)
       
     - CBS   Centraal Bureau voor de Statistiek
-            Kerncijfers Wijken en Buurten (2024)
-            https://www.cbs.nl/nl-nl/maatwerk/2025/38/kerncijfers-wijken-en-buurten-2024
-
-            Kerncijfers Postcode 4 (2024)
-            https://www.cbs.nl/nl-nl/longread/diversen/2023/statistische-gegevens-per-vierkant-en-postcode-2022-2021-2020-2019
-      
+        
+        - Kerncijfers Wijken en Buurten (2024)
+            [link](https://www.cbs.nl/nl-nl/maatwerk/2025/38/kerncijfers-wijken-en-buurten-2024)
+        - Kerncijfers Postcode 4 (2024) [link](https://www.cbs.nl/nl-nl/longread/diversen/2023/statistische-gegevens-per-vierkant-en-postcode-2022-2021-2020-2019)
     - KiM   Kennisinstituut Mobilitiet, Ministerie van Infrastructuur en Waterstaat
             Atlas van de Auto (2024)
-            https://www.kimnet.nl/atlas-van-de-auto#auto-op-de-kaart
+            [link](https://www.kimnet.nl/atlas-van-de-auto#auto-op-de-kaart)
+
 
 ## Data Collection and Preparation
 
