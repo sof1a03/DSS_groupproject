@@ -16,8 +16,8 @@ To run the frontend:
 - Codebase: [GitHub](https://github.com/sof1a03/DSS_groupproject/tree/main)
 - Datasets: 
 	- [RDW](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/RDW.csv)
-   	- [REGIONAL] (https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/REGIONAL.csv)
-   	- [GEO] (https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Geo/CBS_NBH_HEAD_10.csv) 
+   	- [REGIONAL](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/REGIONAL.csv)
+   	- [GEO](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Geo/CBS_NBH_HEAD_10.csv) 
 
 ## Data Collection and Preparation
 
