@@ -63,7 +63,7 @@ The process consists of four main stages:
 
 **Create** PC6→PC4→Buurt/Wijk/Gemeente conversion tables.
 
-- **Inputs:** [CBS_BUURT2025.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_BUURT2025.csv) [CBS_GEM2025.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_GEM2025.csv) [CBS_WIJK2025](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_WIJK2025.csv) [CONVERSION_PC6_HEAD_100](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CONVERSION_PC6_HEAD_100.csv)
+- **Inputs:** [CBS_BUURT2025.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_BUURT2025.csv) [CBS_GEM2025.csv], (https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_GEM2025.csv),  [CBS_WIJK2025](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CBS_WIJK2025.csv) , [CONVERSION_PC6_HEAD_100](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Raw/CONVERSION_PC6_HEAD_100.csv)
 
 - **Run:**
  ```bash
@@ -76,9 +76,9 @@ The process consists of four main stages:
 **Integrate all components** — PC4, NBH, and KiM — into the final REGIONAL dataset. Merges datasets using shared keys. Converts counts to proportions (e.g., age distribution). Renames columns  to English. Applies Z-standardization to all continuous variables. Merge all into a single table. 
 
 - **Inputs:**
-[CBS_NBH.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CBS_NBH.csv)
-[CBS_PC4.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CBS_PC4.csv)
-[KIM.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/KIM.csv)
+[CBS_NBH.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CBS_NBH.csv), 
+[CBS_PC4.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CBS_PC4.csv), 
+[KIM.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/KIM.csv), 
 [CONVERSION_PC4_NBH_HEAD_100.csv](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Cleaned/CONVERSION_PC4_NBH_HEAD_100.csv) 
 
 - **Run:**
