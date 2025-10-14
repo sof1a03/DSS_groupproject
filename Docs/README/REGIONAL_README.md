@@ -12,7 +12,7 @@ Final databases in **BigQuery**:
 
 ## Scripts
 
-### `01_REGIONAL_extr_transf.py`
+### 01_REGIONAL_extr_transf.py
 Convert CBS GeoPackage to a flat CSV for BigQuery.
 
 - **Input:** `data_raw/cbs_pc6_2023.gpkg`
@@ -22,7 +22,7 @@ Convert CBS GeoPackage to a flat CSV for BigQuery.
 
 ---
 
-### `02_REGIONAL_cleaning.py`
+### 02_REGIONAL_cleaning.py
 Build a **PC6→PC4→(buurt/wijk/gemeente)** conversion table with names.
 
 - **Inputs:**  
@@ -34,7 +34,7 @@ Build a **PC6→PC4→(buurt/wijk/gemeente)** conversion table with names.
 
 ---
 
-### `02_NBH_REGIONAL_cleaning.py`
+### 02_NBH_REGIONAL_cleaning.py
 Extract **neighbourhood** (“Buurt”) facts from CBS KWB.
 
 - **Input:** `data_raw/cbs-kwb-2024.csv`
@@ -44,7 +44,7 @@ Extract **neighbourhood** (“Buurt”) facts from CBS KWB.
 
 ---
 
-### `02_PC4_REGIONAL_cleaning.py`
+### 02_PC4_REGIONAL_cleaning.py
 Prepare **PC4**-level CBS indicators.
 
 - **Input:** `data_raw/cbs_pc4_2023.csv`
@@ -56,7 +56,7 @@ Prepare **PC4**-level CBS indicators.
 
 ---
 
-### `03_REGIONAL_classification.py`
+### 03_REGIONAL_classification.py
 Create **final, standardized** CSVs for BigQuery (with `std_` Z-scores).
 
 - **Inputs:**  
