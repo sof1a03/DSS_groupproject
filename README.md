@@ -8,7 +8,7 @@ To run the frontend:
 3. From the project root, run:
 
    ```
-   docker-compose up --build
+   docker compose up --build
    ```
 4. Once the container is ready, go to `localhost:8501` to view the dashboard.
 
