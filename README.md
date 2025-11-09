@@ -59,36 +59,19 @@ The **Load** phase exports the final tables to BigQuery and populates the dashbo
    - **CSF/KPI:** *Car–Market Fit* indicator measuring how well a car model aligns with regional socio-economic profiles.  
    - **Data Source:** Combined [RDW](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/RDW.csv) + [CBS Regional](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/REGIONAL.csv) data.  
    - **Computation:** Weighted Manhattan distance between car attributes (body/fuel type, price) and regional indicators (income, fleet composition).  
-     \[
-     MatchScore = 0.7 \times Interest + 0.3 \times Affordability
-     \]  
-     where *Interest* (0.6 body type, 0.4 fuel type) and *Affordability* (price–income similarity) are standardized in [0–1].  
    - **Visualization:** Heatmap of PC4 regions and *Top-N table* with region name, score, affordability, and interest.  
    - **Code File:** [analysis_matchscore.py](https://github.com/sof1a03/DSS_groupproject/blob/main/Code/Analytics/analysis_matchscore.py).  
 
 4. **Market Positioning Indicators (Popularity, Niche)**  
    - **CSF/KPI:** Market dynamics and positioning within vehicle segments.  
    - **Data Source:** [RDW](https://github.com/sof1a03/DSS_groupproject/blob/main/Data/Final/RDW.csv).  
-   - **Computation:**  
-     - *Popularity (%):* relative sales within segment  
-       \[
-       Popularity = \frac{Sales_{model}}{Sales_{leader(segment)}} \times 100
-       \]  
-     - *Niche (%):* combination of standardized price and inverse sales percentile  
-       \[
-       Niche = (P_{price} + (1 - P_{sales})) \times 100
-       \]  
    - **Visualization:** Radar or bar charts showing model distribution across body classes.  
    - **Code File:** [analysis_marketposition.py](https://github.com/sof1a03/DSS_groupproject/blob/main/Code/Analytics/analysis_marketposition.py).  
 
 5. **Market Potential & Forecasting**  
    - **CSF/KPI:** *Projected Market Growth* and *Forecast Accuracy (SMAPE)*.  
    - **Data Source:** Dynamic RDW API (registrations 2020–2025).  
-   - **Computation:** *Holt–Winters Exponential Smoothing* with additive trend and seasonality.  
-     \[
-     CAGR = \left(\frac{Sales_{t+5}}{Sales_t}\right)^{1/5} - 1
-     \]  
-     Forecasts displayed with ±80% prediction intervals.  
+   - **Computation:** *Holt–Winters Exponential Smoothing* with additive trend and seasonality. Forecasts displayed with ±80% prediction intervals.  
    - **Visualization:** Line chart showing historical vs. predicted registrations for new and second-hand vehicles.  
    - **Code File:** [forecasting.py](https://github.com/sof1a03/DSS_groupproject/blob/main/Code/Analytics/forecasting.py).  
 
