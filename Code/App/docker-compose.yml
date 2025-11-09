@@ -11,6 +11,7 @@ services:
       STREAMLIT_SERVER_HEADLESS: "true"
       STREAMLIT_SERVER_ADDRESS: "0.0.0.0"
       STREAMLIT_SERVER_PORT: "8501"
+      # Optional: override default Mapbox token
+      # MAPBOX_API_KEY: "pk.XXXXXXXX"
     volumes:
       - ./compact-garage-473209-u4-29d992b4a4b1.json:/run/secrets/gcp_credentials:ro
-
