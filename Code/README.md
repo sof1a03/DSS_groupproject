@@ -32,4 +32,7 @@ Used for generating derived indicators and preparing datasets for analysis and m
 ---
 
 ### Purpose
-These folders collectively form the project pipeline — from data ingestion (ETL) to feature creation and final application deployment (App).
+These folders collectively form the project pipeline:
+1. Data ingestion (ETL)
+2. Feature creation
+3. Application deployment (App).
