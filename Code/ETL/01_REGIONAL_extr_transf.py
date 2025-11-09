@@ -3,7 +3,7 @@ import pandas as pd
 import geopandas as gpd
 
 # Reading a GeoPackage file
-input_file = "cbs_pc6_2023.gpkg"
+input_file = "cbs_pc4_2024.gpkg"
 data = gpd.read_file(input_file)
 
 cols = (
@@ -26,4 +26,4 @@ cols = (
 )
 
 df = pd.DataFrame(data, columns=cols)
-df.to_csv("cbs_pc6_2023.csv", index=False)
+df.to_csv("cbs_pc4_2024.csv", index=False)
