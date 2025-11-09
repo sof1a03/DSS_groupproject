@@ -4,7 +4,7 @@ These folders collectively form the project pipeline:
 2. Data ingestion (ETL)
 3. Feature creation
 
-## 1.App
+### 1. App
 Contains the application, including scripts for running the dashboard with Dokcker as explained [here](https://github.com/sof1a03/DSS_groupproject/blob/main/README.md), APIs, and visualization interfaces. 
 It consists of the following documents:
 - **main.py**: The main Streamlit application file that controls the dashboard layout and page navigation.
@@ -16,7 +16,7 @@ It consists of the following documents:
 - **docker-compose.yml**: Defines the configuration for running the application in a multi-container environment.
 - **Dockerfile**:Builds the Docker image containing the Python environment and application code.
 
-## 2.ETL
+### 2. ETL
 Includes Extract–Transform–Load (ETL) scripts for processing and integrating raw datasets.
 - **01_RDW_extraction.ipynb**: Calls RDW API, retrieves relevant vehicle info. Calls another API to find image of vehicle
 - **01_REGIONAL_extr_transf.py**: Converts original CBS data (.gpkg), flattens nested coordinates with GeoPandas, exports as CSV
@@ -27,7 +27,7 @@ Includes Extract–Transform–Load (ETL) scripts for processing and integrating
 - **03_RDW_classification.ipynb**: Classifies car models into six segments (compact, medium, large, mpv, suv, sports)
 - **03_REGIONAL_load.py**: Creates final  dataset by merging NBH and PC4 datasets, aggregating to PC4
 
-## 3.Features
+### 3. Features
 Stores feature engineering notebooks and scripts created in Google Colab. Used for generating derived indicators and preparing datasets for analysis and model training.
 The main feature computed are:
 - **MatchScore**: Measures how well each car model fits regional socio-demographic and fleet profiles.
