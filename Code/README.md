@@ -28,7 +28,7 @@ Includes Extract–Transform–Load (ETL) scripts for processing and integrating
 - **03_REGIONAL_load.py**: Creates final  dataset by merging NBH and PC4 datasets, aggregating to PC4
 
 ### 3. Features
-Stores feature engineering notebooks and scripts created in Google Colab. Used for generating derived indicators and preparing datasets for analysis and model training.
+Stores feature engineering notebooks and scripts created in Google Colab. Starting with two **descriptive** analysis of the main datasets, it is used for generating derived indicators and preparing datasets for analysis and model training.
 The main feature computed are:
 - **MatchScore**: Measures how well each car model fits regional socio-demographic and fleet profiles.
 - **Popularity and Niche Scores**: Evaluate market position based on sales volume and price level.
