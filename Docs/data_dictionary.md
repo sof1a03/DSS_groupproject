@@ -2,6 +2,8 @@
 This document provides a structured description of the data sources used in the DSS-Group04 project.  
 It supports the **Data Understanding & Documentation** phase of the CRISP-DM methodology.
 
+---
+
 ## RDW – Gekentekende Voertuigen (Registered Vehicles)
 
 **Source:**  
@@ -42,6 +44,7 @@ Creative Commons Attribution 4.0 (CC-BY 4.0)
 - `fuel_category` and `body_type_category` computed during ETL classification.  
 - Average price and weight statistics aggregated at model and fuel type level.
 
+---
 
 ## CBS – Demographic and Geographic Data
 
@@ -86,6 +89,7 @@ Creative Commons Attribution 4.0 (CC-BY 4.0)
 - `Z_scores` for population and income distribution (calculated in ETL scripts).  
 - `proportions` for car ownership and density indicators per PC4/Wijk.
 
+---
 
 ## KiM – Atlas van de Auto (Mobility and Car Ownership)
 
@@ -115,6 +119,75 @@ Extracted manually for integration in the `REGIONAL` dataset as reference indica
 - Possible rounding differences across editions.  
 - Regional breakdown not always aligned with CBS boundaries.
 
+---
+
+## Open Charge Map (OCM) – Charging Infrastructure
+
+**Source:**  
+[Open Charge Map API](https://openchargemap.org/site/develop/api) – Global EV charging station database  
+
+**License:**  
+Open Data Commons Open Database License (ODbL)
+
+**Access Method:**  
+Fetched dynamically through REST API queries filtered to Dutch coordinates.  
+Aggregated by PC4 to compute charging infrastructure metrics.  
+Integrated in dashboard EV module and `analysis_ev.py`.  
+
+**Main Columns:**  
+| Column | Description |
+|---------|-------------|
+| `id` | Unique station ID |
+| `address` / `postcode` | Location of charging station |
+| `ConnectionType` | Charger plug/connector type |
+| `PowerKW` | Charging power (kW) |
+| `StatusType` | Operational status (active/inactive) |
+| `n_stations` | Total charging stations per PC4 |
+| `n_ports` | Number of available charging points |
+| `fast_ports` | Number of fast chargers (≥50 kW) |
+| `ultra_fast_ports` | Number of ultra-fast chargers (≥150 kW) |
+| `chargers_per_10k_inhabitants` | Normalized density indicator |
+
+**Known Issues:**  
+- Some stations lack postcode or operational status information.  
+- Minor geocoding errors corrected via spatial joins with CBS geometry.  
+- API occasionally returns duplicate or inactive entries.
+
+**Derived Fields:**  
+- Aggregated indicators by PC4 for EV readiness analysis and cluster labeling.
+
+---
+
+## Google Custom Search API – Vehicle Images
+
+**Source:**  
+[Google Programmable Search Engine](https://developers.google.com/custom-search/v1/introduction)  
+
+**License:**  
+Based on the image source; attribution preserved in dashboard display.  
+
+**Access Method:**  
+Fetched 2–3 representative images for each unique brand–model combination.  
+Used in the Streamlit dashboard for visual reference.  
+Processed in ETL during RDW model classification.  
+
+**Main Columns:**  
+| Column | Description |
+|---------|-------------|
+| `brand` | Car brand |
+| `model` | Car model |
+| `image_url_1` / `image_url_2` / `image_url_3` | Retrieved image URLs |
+| `source_url` | Original hosting website |
+| `valid_flag` | Manually verified image relevance (1 = valid) |
+
+**Known Issues:**  
+- Some queries return incorrect or duplicate images (≈40% manually replaced).  
+- Image hosting URLs may change over time.  
+
+**Derived Fields:**  
+- One validated image stored per model and displayed dynamically in the dashboard UI.
+
+---
 
 ## Summary Table
 
@@ -123,3 +196,5 @@ Extracted manually for integration in the `REGIONAL` dataset as reference indica
 | **RDW** | CC-BY 4.0 | API → CSV → BigQuery | `RDW.csv` | Missing catalog prices; inconsistent model names |
 | **CBS** | CC-BY 4.0 | CSV/GeoJSON → Python ETL | `REGIONAL.csv`, `CBS_NBH_HEAD_10.csv` | Data suppression <5 inhabitants; code changes |
 | **KiM** | CC-BY 4.0 | Web extraction → CSV merge | integrated in `REGIONAL.csv` | Aggregated data; rounding differences |
+| **OCM** | ODbL | REST API → JSON → Aggregation | `analysis_ev.py` | Missing postcodes; duplicate entries |
+| **Google Custom Search** | N/A (API-based) | REST API → URL fetch → Validation | integrated in `RDW.csv` | Non-representative or broken images |
