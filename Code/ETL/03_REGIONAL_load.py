@@ -49,11 +49,12 @@ incl_pc4 = ["pc4",
 incl_nbh = ["gwb_code_8",
             "g_wozbag", 
             "g_hhgro", 
-            "ste_mvs"]
+            "ste_mvs",
+            "a_inw"]
 
 incl_con = ["pc4",
-            "nbh_code"]
-
+            "nbh_code",
+            "municipality_name"]
 
 # Dictionary for renaming/translating columns
 rename_pc4 = {
@@ -68,7 +69,8 @@ rename_nbh = {
     "gwb_code_8": "nbh_code",
     "g_wozbag": "avg_house_value_woz",
     "g_hhgro": "avg_household_size",
-    "ste_mvs": "urbanization"
+    "ste_mvs": "urbanization",
+    "a_inw" : "inhabitants_nbh"
 }
 
 
@@ -98,10 +100,10 @@ nbh = standardize(nbh, ignore_cols=["nbh_code"])
 kim = standardize(kim, ignore_cols=["pc4"])
 
 # _________6. MERGE__________
-merged = pd.merge(nbh, con, how="right", on="nbh_code")
-merged = pd.merge(merged, kim, how="left", on="pc4")
-merged = pd.merge(merged, pc4, how="left", on="pc4").dropna()
-
+merged = con.copy()
+merged = merged.merge(nbh, how="left", on="nbh_code")
+merged = merged.merge(kim, how="left", on="pc4")
+merged = merged.merge(pc4, how="left", on="pc4")
 
 # _________7. ASSIGN CAR TYPE PROBABILITY SCORE__________
 
@@ -140,6 +142,55 @@ for car_type in ["compact", "medium", "large", "suv", "mpv", "sports"]:
     min_d, max_d = distances.min(), distances.max()
     merged[f"p_{car_type}"] = (distances - min_d) / (max_d - min_d)
 
+print(merged.columns)
 
-# _________8. EXPORT__________
-merged.to_csv("data_final/regional.csv", index=False)
+# _________8. AGGREGATE TO PC4-LEVEL, WEIGHTED BY NBH_INHABITANTS__________
+import pandas as pd
+import numpy as np
+
+numeric_cols = [
+    'avg_household_size', 'avg_house_value_woz', 'urbanization', 
+    'std_avg_household_size', 'std_avg_house_value_woz', 'std_urbanization',
+    'p_gasoline', 'p_diesel', 'p_electric', 'p_hybrid', 'avg_yearly_income_k', 
+    'p_car_weight_0_to_850', 'p_car_weight_851_to_1150', 'p_car_weight_1151_to_1500',
+    'p_car_weight_1501_more', 'body_hatchback', 'body_station', 'body_mpv',
+    'std_p_gasoline', 'std_p_diesel', 'std_p_electric', 'std_p_hybrid',
+    'std_avg_yearly_income_k', 'std_p_car_weight_0_to_850',
+    'std_p_car_weight_851_to_1150', 'std_p_car_weight_1151_to_1500',
+    'std_p_car_weight_1501_more', 'std_body_hatchback', 'std_body_station',
+    'std_body_mpv', 'inhabitants_total', 'p_inhb_15_to_25_year',
+    'p_inhb_25_to_45_year', 'p_inhb_45_to_65_year', 'p_inhb_65_year_older',
+    'std_p_inhb_15_to_25_year', 'std_p_inhb_25_to_45_year',
+    'std_p_inhb_45_to_65_year', 'std_p_inhb_65_year_older', 'p_compact',
+    'p_medium', 'p_large', 'p_suv', 'p_mpv', 'p_sports'
+]
+
+def weighted_avg(group, column, weight_column):
+    weights = group[weight_column]
+    data = group[column]
+    if weights.sum() == 0:
+        return data.mean() 
+    return np.average(data, weights=weights)
+
+agg_dict = {}
+weight_col = 'inhabitants_nbh'
+
+for col in numeric_cols:
+    agg_dict[col] = pd.NamedAgg(
+        column=col,
+        aggfunc=lambda x: weighted_avg(x.to_frame().reset_index(), col, weight_col)
+    )
+
+merged_aggregated_weighted = merged.groupby('pc4').apply(
+    lambda group: pd.Series({
+        col: weighted_avg(group, col, weight_col) for col in numeric_cols
+    })
+)
+
+merged_aggregated_weighted = merged_aggregated_weighted.reset_index()
+print(merged_aggregated_weighted.columns)
+
+
+# _________9. EXPORT__________
+merged_aggregated_weighted.to_csv("data_final/REGIONAL_PC4.csv", index=False)
+print("DONE")
